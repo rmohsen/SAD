@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'S1',
+    'django_jinja'
 ]
 
 MIDDLEWARE = [
@@ -54,8 +55,16 @@ ROOT_URLCONF = 'SAD.urls'
 
 TEMPLATES = [
     {
+        "BACKEND": "django_jinja.backend.Jinja2",
+        "APP_DIRS": True,
+        'DIRS': [os.path.join(BASE_DIR, 'S1\\Web\\templates')],
+        # "OPTIONS": {
+        #     "match_extension": ".jinja",
+        # }
+    },
+    {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates')]
+        'DIRS': [os.path.join(BASE_DIR, 'S1\\Web\\templates')]
         ,
         'APP_DIRS': True,
         'OPTIONS': {
@@ -120,3 +129,12 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
 STATIC_URL = '/static/'
+STATICFILES_FINDERS = (
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+)
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "S1\\Web\\Code\\"),
+ ]
+
+# print (os.path.join(BASE_DIR, "S1\\Web\\Code\\"))

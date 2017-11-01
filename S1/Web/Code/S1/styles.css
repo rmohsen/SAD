@@ -1,0 +1,26 @@
+.tbl1 {
+  margin: 0 auto;
+  background-color: #f6f6f6;
+  border: solid 1px #e4e4e4;
+  table-layout: fixed;
+  width: 90%;
+}
+.tbl1 tr:hover {
+  background-color: #ededed;
+}
+.tbl1 td,
+.tbl1 th {
+  border: solid 1px #e4e4e4;
+  border-collapse: collapse;
+}
+.tbl1 th {
+  padding: 10px;
+  font-weight: bold;
+  font-size: 1.5vw;
+  text-align: center;
+}
+.tbl1 td {
+  padding: 5px;
+  font-size: 1.3vw;
+  text-align: right;
+}

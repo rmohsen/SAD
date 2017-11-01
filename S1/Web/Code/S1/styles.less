@@ -1,0 +1,31 @@
+@bg_white: #f6f6f6;
+@bg_dark_white: #ededed;
+@bg_border: #e4e4e4;
+
+.tbl1{
+  margin: 0 auto;
+  background-color: @bg_white;
+  border: solid 1px @bg_border;
+  table-layout: fixed;
+  width: 90%;
+}
+
+.tbl1 tr:hover{
+  background-color: @bg_dark_white;
+}
+.tbl1 td, .tbl1 th{
+    border: solid 1px @bg_border;
+    border-collapse: collapse;
+}
+.tbl1 th {
+  padding: 10px;
+  font-weight: bold;
+  font-size: 1.5vw;
+  text-align: center;
+}
+.tbl1 td {
+  padding: 5px;
+  font-size: 1.3vw;
+  text-align: right;
+}
+

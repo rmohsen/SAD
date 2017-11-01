@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Hello Guys</title>
+    <link href="{{ static }}{{ 'main.css' }}" rel="stylesheet">
+    <link href="{{ static }}{{ 'styles.css' }}" rel="stylesheet">
+    <script src="{{ static }}{{ ' bJquery/jquery-3.2.1.min.js' }}" type="text/javascript"></script>
+</head>
+<body>
+    <table class="tbl1" cellspacing="0">
+        <tr>
+        {% for value in data.header %}
+            <th>
+                {{ value }}
+            </th>
+        {%  endfor %}
+        </tr>
+        {% for row in data.body %}
+        <tr>
+            {% for item in row %}
+                <td>
+                    {{ item }}
+                </td>
+            {% endfor %}
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>

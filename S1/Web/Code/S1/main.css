@@ -1,0 +1,10 @@
+@font-face {
+  font-family: BNazanin;
+  src: url("Resources/fonts/BNazanin/B Nazanin.ttf");
+}
+body {
+  font-family: BNazanin, Tahoma, Arial;
+  margin: 0;
+  padding: 0;
+  direction: rtl;
+}
