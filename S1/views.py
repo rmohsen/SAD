@@ -8,7 +8,7 @@ from django.urls import reverse
 def index(request):
     env = Environment(loader=PackageLoader('S1', 'Web/templates'), autoescape=select_autoescape(['html', 'xml']))
     env.globals.update({'static': staticfiles_storage.url("S1/"), 'url': reverse})
-    template = env.get_template('list.html')
+    template = env.get_template('container.html')
     return HttpResponse(template.render(data={'header': ['نام', 'نام خانوادگی', 'تاریخ تولد', 'کد ملی'],
                                          'body': [['آرمین', 'بهنام نیا', '16/8/1374', '0018569773'],
                                                   ['آرش', 'پوردامغانی', '16/8/1374', '0010010017'],

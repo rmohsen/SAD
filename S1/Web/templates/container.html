@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link href="{{ static }}{{ 'main.css' }}" rel="stylesheet">
+    <script src="{{ static }}{{ 'Jquery/jquery-3.2.1.min.js' }}" type="text/javascript"></script>
+    <script src="{{ static }}{{ 'app.js' }}" type="text/javascript"></script>
+</head>
+<body>
+    <div id="page-head">
+        رسیدگی به امور دانشجویان
+    </div>
+    <div class="tab-container">
+        <div class="tabs">
+            <div class="tab">
+                <input type="radio" name="tab-select" value="1" id="tab-1">
+                <label for="tab-1">نمایش لیست دانشجویان</label>
+            </div>
+            <div class="tab">
+                <input type="radio" name="tab-select" value="2" id="tab-2">
+                <label for="tab-2">افزودن دانشجو</label>
+            </div>
+            <div class="tab">
+                <input type="radio" name="tab-select" value="3" id="tab-3">
+                <label for="tab-3">حذف دانشجو</label>
+            </div>
+            <div class="tab">
+                <input type="radio" name="tab-select" value="4" id="tab-4">
+                <label for="tab-4">ویرایش اطلاعات دانشجو</label>
+            </div>
+        </div>
+        <div class="tab-contents">
+            <div class="tab-content" id="tab-content-1">
+                %list.html%
+            </div>
+            <div class="tab-content" id="tab-content-2">
+                %add.html%
+            </div>
+            <div class="tab-content" id="tab-content-3">
+                %remove.html%
+            </div>
+            <div class="tab-content" id="tab-content-4">
+                %edit.html%
+            </div>
+        </div>
+    </div>
+</body>
+</html>
