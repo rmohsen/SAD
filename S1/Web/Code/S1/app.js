@@ -80,7 +80,7 @@ function removeStudent(){
         url: "remove",
         type: "POST",
         data:{
-            national_id: $("#add-student").find("input[name='identity_code']").prop("value").trim()
+            national_id: $("#remove-student").find("input[name='identity_code']").prop("value").trim()
         }, success: function (result) {
                 alert("Remove Successfully!");
         }, error: function (result) {
