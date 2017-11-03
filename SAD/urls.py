@@ -18,10 +18,9 @@ from django.contrib import admin
 from S1 import views
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^add/', views.auth_register),
-    url(r'^show/', views.represent_student_list),
-    url(r'^edit/', views.edit_student_info),
-    url(r'^remove/', views.remove_student),
-    url(r'^test/', include('S1.urls')),
-    url(r'^',views.index)
+    url(r'^test/add/?$', views.auth_register),
+    url(r'^test/show/?$', views.represent_student_list),
+    url(r'^test/edit/?$', views.edit_student_info),
+    url(r'^test/remove/?$', views.remove_student),
+    url(r'^test/', include('S1.urls'))
 ]

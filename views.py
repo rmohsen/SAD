@@ -1,4 +1,4 @@
-# from django.contrib.auth.models import User
+from django.contrib.auth.models import User
 from django.http import Http404
 from django.shortcuts import render
 from django.http import HttpResponse
@@ -39,7 +39,7 @@ def date_parser(input_date):
     year = ""
     month = ""
     day = ""
-    (year, month, day) = input_date.split('-')
+    (day, month, year) = input_date.split('/')
 
     return date(year=int(year), month=int(month), day=int(day))
 
@@ -47,26 +47,22 @@ def date_parser(input_date):
 def auth_register(request):
     # post
     if request.method == 'POST':
-        # try:
-        t = request.POST
-        if (t['national_id'] == '' or t['first_name'] == '' or t['last_name'] == '' or t['birth_date'] == ''):
-            raise Http404("hame mawared")
-        if Student.objects.filter(identity_code=t['national_id']).exists():
-            raise Http404("user tekrari")
-        print(t['birth_date'])
-        student = Student.objects.create(identity_code=t.get('national_id'),
-                                         first_name=t.get('first_name'),
-                                         last_name=t.get('last_name'),
-                                         birth_date=date_parser(t.get('birth_date'))
-                                         )
-        # user.last_name = t['last_name']
-        # user.first_name = t['first_name']
-        # user.save()
-        #
-        # student = Student(user=user, birth_date=date_parser(t['birth_date']))
-        # student.save()
-        # except:
-        #     raise Http404("problem1!")
+        try:
+            t = request.POST
+            if (t['national_id'] == '' or t['first_name'] == '' or t['last_name'] == '' or t['birth_date'] == ''):
+                raise Http404("hame mawared")
+            if User.objects.filter(username=t['national_id']).exists():
+                raise Http404("user tekrari")
+            user = User.objects.create_user(t['national_id'])
+            user.last_name = t['last_name']
+            user.first_name = t['first_name']
+            user.save()
+
+            student = Student(user=user, birth_date=date_parser(t['birth_date']))
+            student.save()
+
+        except:
+            raise Http404("problem1!")
         return HttpResponse('successful sign up')
 
 
@@ -82,7 +78,7 @@ def represent_student_list(request):
             }
     for s in student_list:
         list = data['body']
-        list.append([s.first_name,s.last_name,s.birth_date,s.identity_code])
+        list.append([s.user.first_name,s.user.last_name,s.birth_date,s.user.username])
     list_content = template.render(data=data)
     template = env.get_template('container.html')
     return HttpResponse(template.render(list_content=list_content))
@@ -90,20 +86,19 @@ def represent_student_list(request):
 def edit_student_info(request):
     t = request.POST
 
-    # user = User.objects.get(username=t['national_id'])
-    student = Student.objects.get(identity_code=t.get('national_id'))
+    user = User.objects.get(username=t['national_id'])
+    student = Student.objects.get(user=user)
 
-    if t.get('first_name') != '': student.first_name = t.get('first_name')
-    if t.get('last_name') != '': student.last_name = t.get('last_name')
-    if t.get('birth_date') != '': student.birth_date = t.get('birth_date')
+    if t['first_name'] != '': user.first_name = t['first_name']
+    if t['last_name'] != '': user.last_name = t['last_name']
+    if t['birth_date'] != '': student.birth_date = t['birth_date']
 
-    # user.save()
+    user.save()
     student.save()
-    return HttpResponse("Edited Successfully!")
+
 
 def remove_student(request):
     t = request.POST
 
-    student = Student.objects.get(identity_code=t.get('national_id'))
-    student.delete()
-    return HttpResponse("successfuliy removed")
+    user = User.objects.get(username=t['national_id'])
+    user.delete()

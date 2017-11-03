@@ -40,11 +40,11 @@ function getCookie(name) {
 var csrftoken;
 $(document).ready(function () {
     csrftoken = $("input[name='csrfmiddlewaretoken']").value;
-    alert(csrftoken);
+    //alert(csrftoken);
 });
 function getList(){
     $.ajax({
-        url: "getList",
+        url: "show",
         type: "POST",
         data: {
                 "X-CSRFToken": csrftoken
@@ -59,10 +59,56 @@ function getList(){
 }
 function addStudent(){
     $.ajax({
-        url: "addStudent",
+        url: "add",
         type: "POST",
         data:{
-
+            first_name: $("#add-student").find("input[name='first_name']").prop("value").trim(),
+            last_name: $("#add-student").find("input[name='last_name']").prop("value").trim(),
+            national_id: $("#add-student").find("input[name='identity_code']").prop("value").trim(),
+            birth_date: $("#add-student").find("input[name='birth_date']").prop("value").trim()
+        }, success: function (result) {
+                alert("Added Successfully!");
+        }, error: function (result) {
+            $("#response").html(result.responseText);
         }
     });
 }
+function removeStudent(){
+    $.ajax({
+        url: "remove",
+        type: "POST",
+        data:{
+            national_id: $("#add-student").find("input[name='identity_code']").prop("value").trim()
+        }, success: function (result) {
+                alert("Remove Successfully!");
+        }, error: function (result) {
+            $("#response").html(result.responseText);
+        }
+    });
+}
+function editStudent(){
+    $.ajax({
+        url: "edit",
+        type: "POST",
+        data:{
+            first_name: $("#edit-student").find("input[name='first_name']").prop("value").trim(),
+            last_name: $("#edit-student").find("input[name='last_name']").prop("value").trim(),
+            national_id: $("#edit-student").find("input[name='identity_code']").prop("value").trim(),
+            birth_date: $("#edit-student").find("input[name='birth_date']").prop("value").trim()
+        }, success: function (result) {
+                alert("Edited Successfully!");
+        }, error: function (result) {
+            $("#response").html(result.responseText);
+        }
+    });
+}
+
+$(document).on("click", "#add-student .sbmt", function () {
+     addStudent();
+});
+$(document).on("click", "#remove-student .sbmt", function () {
+     removeStudent();
+});
+$(document).on("click", "#edit-student .sbmt", function () {
+     editStudent();
+});

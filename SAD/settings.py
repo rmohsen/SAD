@@ -36,7 +36,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'S1',
-    'django_jinja'
+    'django_jinja',
 ]
 
 MIDDLEWARE = [
