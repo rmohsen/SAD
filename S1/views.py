@@ -76,16 +76,13 @@ def represent_student_list(request):
     env.globals.update({'static': staticfiles_storage.url("S1/"), 'url': reverse})
     template = env.get_template('list.html')
     data = {'header': ['نام', 'نام خانوادگی', 'تاریخ تولد', 'کد ملی'],
-            'body': [['آرمین', 'بهنام نیا', '16/8/1374', '0018569773'],
-                     ['آرش', 'پوردامغانی', '16/8/1374', '0010010017'],
-                     ['محسن', 'رحیمی', '16/8/1374', '0018569773']],
+            'body': [],
             }
     for s in student_list:
         list = data['body']
         list.append([s.first_name,s.last_name,s.birth_date,s.identity_code])
     list_content = template.render(data=data)
-    template = env.get_template('container.html')
-    return HttpResponse(template.render(list_content=list_content))
+    return HttpResponse(list_content)
 
 def edit_student_info(request):
     t = request.POST
