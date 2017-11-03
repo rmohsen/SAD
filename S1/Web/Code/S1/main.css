@@ -89,6 +89,73 @@
   bottom: 0;
   height: 500px;
 }
+.form_st1 {
+  width: 27vw;
+  margin: 20px auto;
+  padding: 0;
+}
+.form_st1 input[type="text"],
+.form_st1 input[type="date"],
+.form_st1 input[type="datetime"],
+.form_st1 input[type="email"],
+.form_st1 input[type="number"],
+.form_st1 input[type="search"],
+.form_st1 input[type="time"],
+.form_st1 input[type="url"],
+.form_st1 textarea,
+.form_st1 select {
+  -webkit-transition: all 0.3s ease-in-out;
+  -moz-transition: all 0.3s ease-in-out;
+  -ms-transition: all 0.3s ease-in-out;
+  -o-transition: all 0.3s ease-in-out;
+  outline: none;
+  box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  width: 100%;
+  background: #fff;
+  margin-bottom: 4%;
+  border: 1px solid #ccc;
+  padding: 3%;
+  color: #555;
+  font-family: BNazanin, Tahoma, Arial;
+  font-size: 1.3vw;
+}
+.form_st1 input[type="text"]:focus,
+.form_st1 input[type="date"]:focus,
+.form_st1 input[type="datetime"]:focus,
+.form_st1 input[type="email"]:focus,
+.form_st1 input[type="number"]:focus,
+.form_st1 input[type="search"]:focus,
+.form_st1 input[type="time"]:focus,
+.form_st1 input[type="url"]:focus,
+.form_st1 textarea:focus,
+.form_st1 select:focus {
+  box-shadow: 0 0 5px #4188FF;
+  padding: 3%;
+  border: 1px solid #4188FF;
+}
+.form_st1 input[type="submit"],
+.form_st1 input[type="button"] {
+  box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  width: 100%;
+  padding: 3%;
+  background: #4188FF;
+  border-bottom: 2px solid #4188FF;
+  border-top-style: none;
+  border-right-style: none;
+  border-left-style: none;
+  color: #fff;
+  font-size: 1.3vw;
+  font-family: BNazanin, Tahoma, Arial;
+  cursor: pointer;
+}
+.form_st1 input[type="submit"]:hover,
+.form_st1 input[type="button"]:hover {
+  background: #3973e0;
+}
 @font-face {
   font-family: BNazanin;
   src: url("Resources/fonts/BNazanin/B Nazanin.ttf");
