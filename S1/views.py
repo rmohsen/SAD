@@ -25,14 +25,14 @@ def index(request):
 
 
 
-def listStudents(request):
-    template = env.get_template('list.html')
-    list_content = template.render(data={'header': ['نام', 'نام خانوادگی', 'تاریخ تولد', 'کد ملی'],
-                                         'body': [['آرمین', 'بهنام نیا', '16/8/1374', '0018569773'],
-                                                  ['آرش', 'پوردامغانی', '16/8/1374', '0010010017'],
-                                                  ['محسن', 'رحیمی', '16/8/1374', '0018569773']]
-                                         }, request=request)
-    return HttpResponse(list_content)
+# def listStudents(request):
+#     template = env.get_template('list.html')
+#     list_content = template.render(data={'header': ['نام', 'نام خانوادگی', 'تاریخ تولد', 'کد ملی'],
+#                                          'body': [['آرمین', 'بهنام نیا', '16/8/1374', '0018569773'],
+#                                                   ['آرش', 'پوردامغانی', '16/8/1374', '0010010017'],
+#                                                   ['محسن', 'رحیمی', '16/8/1374', '0018569773']]
+#                                          }, request=request)
+#     return HttpResponse(list_content)
 
 
 def date_parser(input_date):
@@ -75,7 +75,7 @@ def represent_student_list(request):
     env = Environment(loader=PackageLoader('S1', 'Web/templates'))
     env.globals.update({'static': staticfiles_storage.url("S1/"), 'url': reverse})
     template = env.get_template('list.html')
-    data = {'header': ['نام', 'نام خانوادگی', 'تاریخ تولد', 'کد ملی'],
+    data = {'header': ['نام', 'نام خانوادگی', 'تاریخ تولد', 'شماره شناسنامه'],
             'body': [],
             }
     for s in student_list:
