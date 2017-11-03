@@ -88,8 +88,10 @@ def edit_student_info(request):
     t = request.POST
 
     # user = User.objects.get(username=t['national_id'])
-    student = Student.objects.get(identity_code=t.get('national_id'))
-
+    try:
+        student = Student.objects.get(identity_code=t.get('national_id'))
+    except:
+        raise Http404("no user")
     if t.get('first_name') != '': student.first_name = t.get('first_name')
     if t.get('last_name') != '': student.last_name = t.get('last_name')
     if t.get('birth_date') != '': student.birth_date = t.get('birth_date')
@@ -100,7 +102,9 @@ def edit_student_info(request):
 
 def remove_student(request):
     t = request.POST
-
-    student = Student.objects.get(identity_code=t.get('national_id'))
+    try:
+        student = Student.objects.get(identity_code=t.get('national_id'))
+    except:
+        raise Http404("no user")
     student.delete()
     return HttpResponse("successfuliy removed")

@@ -24,7 +24,7 @@ SECRET_KEY = '(uwyq-s$o$x(ok@k17r8g1mn4yklr%o@2@fzi8g9^09gzp60qw'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS =  []
 
 # Application definition
 
@@ -134,7 +134,6 @@ CSRF_USE_SESSIONS = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
-STATIC_URL = '/static/'
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
@@ -142,5 +141,6 @@ STATICFILES_FINDERS = (
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "S1\\Web\\Code\\"),
 ]
+STATIC_URL = '/static/'
 
 # print (os.path.join(BASE_DIR, "S1\\Web\\Code\\"))

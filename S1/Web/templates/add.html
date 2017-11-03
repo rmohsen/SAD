@@ -1,10 +1,14 @@
 <div class="header">
     افزودن دانشجو
 </div>
-<form id="add-student" class="form_st1" action="addStudent" method="POST">
+<form id="add-student" class="form_st1" action="addStudent" method="POST" autocomplete="off">
     <input type="text" name="first_name" placeholder="نام">
     <input type="text" name="last_name" placeholder="نام خانوادگی">
     <input type="text" name="identity_code" placeholder="کد ملی">
     <input type="date" name="birth_date" placeholder="تاریخ تولد">
+    <input type="hidden" class="first_name_v" value="E">
+    <input type="hidden" class="last_name_v" value="E">
+    <input type="hidden" class="identity_code_v" value="E">
+    <input type="hidden" class="birth_date_v" value="E">
     <input type="button" value="افزودن" class="sbmt">
 </form>

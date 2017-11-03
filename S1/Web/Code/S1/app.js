@@ -70,6 +70,8 @@ function addStudent(){
                 alert("Added Successfully!");
         }, error: function (result) {
             $("#response").html(result.responseText);
+            if ($("#response #info p").html().trim() == "user tekrari")
+                alert("دانشجوی مورد نظر در سامانه موجود می باشد.");
         }
     });
 }
@@ -83,6 +85,9 @@ function removeStudent(){
                 alert("Remove Successfully!");
         }, error: function (result) {
             $("#response").html(result.responseText);
+            if ($("#response #info p").html().trim() == "no user")
+                alert("دانشجوی مورد نظر در سامانه موجود نمی باشد.");
+
         }
     });
 }
@@ -99,16 +104,119 @@ function editStudent(){
                 alert("Edited Successfully!");
         }, error: function (result) {
             $("#response").html(result.responseText);
+            if ($("#response #info p").html().trim() == "no user")
+                alert("دانشجوی مورد نظر در سامانه موجود نمی باشد.");
         }
     });
 }
 
+function emptyCheck(element, container){
+    if (element.value.trim() == ""){
+        $(container).find("." + $(element).attr("name") + "_v").prop("value", "E");
+    } else {
+        $(container).find("." + $(element).attr("name") + "_v").prop("value", "V");
+    }
+}
+
 $(document).on("click", "#add-student .sbmt", function () {
-     addStudent();
+    if ($("#add-student .first_name_v").prop("value") == "V" &&
+        $("#add-student .last_name_v").prop("value") == "V" &&
+        $("#add-student .identity_code_v").prop("value") == "V" &&
+        $("#add-student .birth_date_v").prop("value") == "V")
+        addStudent();
+    else {
+        if ($("#add-student .first_name_v").prop("value") == "E"){
+            $("#add-student input[name='first_name']").css("background-color", "#ffa7a5");
+        }
+        if ($("#add-student .last_name_v").prop("value") == "E"){
+            $("#add-student input[name='last_name']").css("background-color", "#ffa7a5");
+        }
+        if ($("#add-student .identity_code_v").prop("value") == "E"){
+            $("#add-student input[name='identity_code']").css("background-color", "#ffa7a5");
+        }
+        if ($("#add-student .birth_date_v").prop("value") == "E"){
+            $("#add-student input[name='birth_date']").css("background-color", "#ffa7a5");
+        }
+        alert("برخی فیلد ها پر نشده اند.")
+    }
 });
+$(document).on("focusout", "#add-student input[name='first_name']", function () {
+    emptyCheck(this, $("#add-student"))
+});
+$(document).on("focusout", "#add-student input[name='last_name']", function () {
+    emptyCheck(this, $("#add-student"))
+});
+$(document).on("focusout", "#add-student input[name='identity_code']", function () {
+    emptyCheck(this, $("#add-student"))
+});
+$(document).on("focusout", "#add-student input[name='birth_date']", function () {
+    emptyCheck(this, $("#add-student"))
+});
+$(document).on("focus", "input[name='first_name']", function () {
+    $(this).css("background-color", "white");
+});
+$(document).on("focus", "input[name='last_name']", function () {
+    $(this).css("background-color", "white");
+});
+$(document).on("focus", "input[name='identity_code']", function () {
+    $(this).css("background-color", "white");
+});
+$(document).on("focus", "input[name='birth_date']", function () {
+    $(this).css("background-color", "white");
+});
+
+
+
 $(document).on("click", "#remove-student .sbmt", function () {
-     removeStudent();
+    if ($("#remove-student .identity_code_v").prop("value") == "V")
+        removeStudent();
+    else {
+        if ($("#remove-student .identity_code_v").prop("value") == "E"){
+            $("#remove-student input[name='identity_code']").css("background-color", "#ffa7a5");
+        }
+        alert("برخی فیلد ها پر نشده اند.")
+    }
 });
+
+$(document).on("focusout", "#remove-student input[name='identity_code']", function () {
+    emptyCheck(this, $("#remove-student"))
+});
+
+
+
+
 $(document).on("click", "#edit-student .sbmt", function () {
-     editStudent();
+    if ($("#edit-student .first_name_v").prop("value") == "V" &&
+        $("#edit-student .last_name_v").prop("value") == "V" &&
+        $("#edit-student .identity_code_v").prop("value") == "V" &&
+        $("#edit-student .birth_date_v").prop("value") == "V")
+        editStudent();
+    else {
+        if ($("#edit-student .first_name_v").prop("value") == "E"){
+            $("#edit-student input[name='first_name']").css("background-color", "#ffa7a5");
+        }
+        if ($("#edit-student .last_name_v").prop("value") == "E"){
+            $("#edit-student input[name='last_name']").css("background-color", "#ffa7a5");
+        }
+        if ($("#edit-student .identity_code_v").prop("value") == "E"){
+            $("#edit-student input[name='identity_code']").css("background-color", "#ffa7a5");
+        }
+        if ($("#edit-student .birth_date_v").prop("value") == "E"){
+            $("#edit-student input[name='birth_date']").css("background-color", "#ffa7a5");
+        }
+        alert("برخی فیلد ها پر نشده اند.")
+    }
+
+});
+$(document).on("focusout", "#edit-student input[name='first_name']", function () {
+    emptyCheck(this, $("#edit-student"))
+});
+$(document).on("focusout", "#edit-student input[name='last_name']", function () {
+    emptyCheck(this, $("#edit-student"))
+});
+$(document).on("focusout", "#edit-student input[name='identity_code']", function () {
+    emptyCheck(this, $("#edit-student"))
+});
+$(document).on("focusout", "#edit-student input[name='birth_date']", function () {
+    emptyCheck(this, $("#edit-student"))
 });
