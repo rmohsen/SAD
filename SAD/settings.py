@@ -58,9 +58,14 @@ TEMPLATES = [
         "BACKEND": "django_jinja.backend.Jinja2",
         "APP_DIRS": True,
         'DIRS': [os.path.join(BASE_DIR, 'S1\\Web\\templates')],
-        # "OPTIONS": {
-        #     "match_extension": ".jinja",
-        # }
+        'OPTIONS': {
+            'context_processors': [
+                'django.template.context_processors.debug',
+                'django.template.context_processors.request',
+                'django.contrib.auth.context_processors.auth',
+                'django.contrib.messages.context_processors.messages',
+            ],
+        },
     },
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -124,6 +129,7 @@ USE_L10N = True
 
 USE_TZ = True
 
+CSRF_USE_SESSIONS = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
