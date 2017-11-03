@@ -90,7 +90,9 @@
   height: 500px;
 }
 .form_st1 {
-  width: 27vw;
+  width: 35vw;
+  min-width: 300px;
+  max-width: 95vw;
   margin: 20px auto;
   padding: 0;
 }
