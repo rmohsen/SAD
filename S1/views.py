@@ -108,3 +108,70 @@ def remove_student(request):
         raise Http404("no user")
     student.delete()
     return HttpResponse("successfuliy removed")
+
+
+def remove_student(request):
+    t = request.POST
+
+    user = User.objects.get(username=t['national_id'])
+    user.delete()
+
+
+def enterance(request):
+    pass
+
+
+def process_creation(request):
+    pass
+
+
+def get_process(request):
+    pass
+
+
+def phase_creation(request):
+    pass
+
+
+def get_phase_types(request):
+    pass
+
+
+def add_phase_to_process(request):
+    pass
+
+
+def get_accountant_cartable(request):
+    pass
+
+
+def verify_phase(request):
+    pass
+
+
+def get_processes_student(request):
+    pass
+
+
+def get_start_phase(request):
+    pass
+
+
+def get_next_phase(request):
+    pass
+
+
+def upload_attachment(request):
+    pass
+
+
+def pay(request):
+    pass
+
+
+def submit_date(request):
+    pass
+
+
+def get_main_page(request):
+    pass
