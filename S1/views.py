@@ -5,11 +5,11 @@ from django.http import HttpResponse
 from jinja2 import Environment, PackageLoader, select_autoescape
 from django.contrib.staticfiles.storage import staticfiles_storage
 from django.urls import reverse
+from S1 import models
 
 # Create your views here.
 from S1.models import Student
 from datetime import date
-
 
 env = Environment(loader=PackageLoader('S1', 'Web/templates'))
 env.globals.update({'static': staticfiles_storage.url("S1/"), 'url': reverse})
@@ -18,11 +18,10 @@ env.globals.update({'static': staticfiles_storage.url("S1/"), 'url': reverse})
 def index(request):
     template = env.get_template('container.html')
     return HttpResponse(template.render({
-                            'addForm': env.get_template("add.html").render(),
-                            'removeForm': env.get_template("remove.html").render(),
-                            'editForm': env.get_template("edit.html").render(),
-                        }))
-
+        'addForm': env.get_template("add.html").render(),
+        'removeForm': env.get_template("remove.html").render(),
+        'editForm': env.get_template("edit.html").render(),
+    }))
 
 
 # def listStudents(request):
@@ -80,9 +79,10 @@ def represent_student_list(request):
             }
     for s in student_list:
         list = data['body']
-        list.append([s.first_name,s.last_name,s.birth_date,s.identity_code])
+        list.append([s.first_name, s.last_name, s.birth_date, s.identity_code])
     list_content = template.render(data=data)
     return HttpResponse(list_content)
+
 
 def edit_student_info(request):
     t = request.POST
@@ -99,6 +99,7 @@ def edit_student_info(request):
     # user.save()
     student.save()
     return HttpResponse("Edited Successfully!")
+
 
 def remove_student(request):
     t = request.POST
@@ -117,40 +118,81 @@ def remove_student(request):
     user.delete()
 
 
-def enterance(request):
+def sign_in(request):
     pass
 
 
 def process_creation(request):
-    pass
+    # get person - > manager
+    manager = ...
+    process_name = ...
+    f_phase = ...
+    process = models.Process.objects.create(name=process_name,
+                                            start_phase=f_phase)
+    process.save()
+
+
+from anytree import Node
 
 
 def get_process(request):
+    process_name = ...
+    process = models.Process.objects.get(name=process_name)
+    phase_list = []
+    f_phase = process.start_phase
+    tree = Node(f_phase)
+    make_tree(tree, f_phase)
     pass
+
+
+def make_tree(node, f_phase):
+    if not f_phase.is_finish:
+        acc_phase = f_phase.next_phase_acc.s_phase
+        rej_phase = f_phase.next_phase_rej.s_phase
+        make_tree(Node(acc_phase, parent=f_phase), acc_phase)
+        make_tree(Node(rej_phase, parent=f_phase), rej_phase)
 
 
 def phase_creation(request):
-    pass
+    phase_type = ...
+    phase = models.Phase.objects.create(phase_type=phase_type)
+    phase.save()
 
 
 def get_phase_types(request):
-    pass
-
-
-def add_phase_to_process(request):
-    pass
+    models.PhaseType.objects.all()
 
 
 def get_accountant_cartable(request):
     pass
 
 
+def get_phase(request):
+    id = ...
+    phase = models.Phase.objects.get(id=id)
+
+
 def verify_phase(request):
-    pass
+    id = ...
+    phase = models.Phase.objects.get(id=id)
+    phase.is_verified = True
+    phase.save()
 
 
 def get_processes_student(request):
-    pass
+    models.Process.objects.all()
+
+
+def get_process_student(request):
+    proc_name = ...
+    models.Process.objects.get(name=proc_name)
+
+
+def create_phase_rel(request):
+    f_phase = ...
+    s_phase = ...
+    is_acc = ...
+    rel = models.PairPhase.objects.create(f_phase=f_phase,s_phase=s_phase,is_acc=is_acc)
 
 
 def get_start_phase(request):
@@ -162,14 +204,16 @@ def get_next_phase(request):
 
 
 def upload_attachment(request):
-    pass
-
+    file = ...
+    title = ...
+    attachment = models.Attachment.objects.create(file=file,title=title)
+    attachment.save()
 
 def pay(request):
     pass
 
 
-def submit_date(request):
+def submit_data(request):
     pass
 
 
