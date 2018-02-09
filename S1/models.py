@@ -2,17 +2,11 @@ from django.db import models
 from django.contrib.auth.models import User
 
 
-class Student(models.Model):
-    # user = models.ForeignKey(User, on_delete=models.CASCADE)
-    first_name = models.CharField(max_length=50)
-    last_name = models.CharField(max_length=50)
-    identity_code = models.CharField(max_length=10, primary_key=True)
+class Person(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
     birth_date = models.DateField()
-
-
-# class Student(models.Model):
-#     user = models.ForeignKey(User, on_delete=models.CASCADE)
-#     birth_date = models.DateField()
+    identity_code = models.CharField(max_length=10, primary_key=True)
+    position = models.ForeignKey(Position, on_delete=models.CASCADE)
 
 
 class Attachment(models.Model):

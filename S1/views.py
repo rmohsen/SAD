@@ -1,4 +1,3 @@
-# from django.contrib.auth.models import User
 from django.http import Http404
 from django.shortcuts import render
 from django.http import HttpResponse
@@ -6,9 +5,11 @@ from jinja2 import Environment, PackageLoader, select_autoescape
 from django.contrib.staticfiles.storage import staticfiles_storage
 from django.urls import reverse
 from S1 import models
+from django.contrib.auth.models import Permission, User
+from django.contrib.auth import authenticate, login
 
 # Create your views here.
-from S1.models import Student
+from S1.models import Person
 from datetime import date
 
 env = Environment(loader=PackageLoader('S1', 'Web/templates'))
@@ -48,78 +49,84 @@ def auth_register(request):
     if request.method == 'POST':
         # try:
         t = request.POST
-        if (t['national_id'] == '' or t['first_name'] == '' or t['last_name'] == '' or t['birth_date'] == ''):
+        if t['national_id'] == '' or t['first_name'] == '' or t['last_name'] == '' or t['birth_date'] == '':
             raise Http404("hame mawared")
-        if Student.objects.filter(identity_code=t['national_id']).exists():
+        if Person.objects.filter(identity_code=t['national_id']).exists():
             raise Http404("user tekrari")
         print(t['birth_date'])
-        student = Student.objects.create(identity_code=t.get('national_id'),
-                                         first_name=t.get('first_name'),
-                                         last_name=t.get('last_name'),
-                                         birth_date=date_parser(t.get('birth_date'))
-                                         )
-        # user.last_name = t['last_name']
-        # user.first_name = t['first_name']
-        # user.save()
-        #
-        # student = Student(user=user, birth_date=date_parser(t['birth_date']))
-        # student.save()
-        # except:
-        #     raise Http404("problem1!")
+        user = User.objects.create(username=t.get('user_name')
+                                   , password=t.get('password')
+                                   , email=t.get('email')
+                                   , first_name=t.get('first_name')
+                                   , last_name=t.get('last_name'))
+
+        person = Person.objects.create(identity_code=t.get('national_id'),
+                                       user=user,
+                                       last_name=t.get('last_name'),
+                                       birth_date=date_parser(t.get('birth_date')))
+
         return HttpResponse('successful sign up')
 
 
-def represent_student_list(request):
-    student_list = Student.objects.all()
+# def represent_student_list(request):
+#     student_list = Student.objects.all()
+#     env = Environment(loader=PackageLoader('S1', 'Web/templates'))
+#     env.globals.update({'static': staticfiles_storage.url("S1/"), 'url': reverse})
+#     template = env.get_template('list.html')
+#     data = {'header': ['نام', 'نام خانوادگی', 'تاریخ تولد', 'شماره شناسنامه'],
+#             'body': [],
+#             }
+#     for s in student_list:
+#         list = data['body']
+#         list.append([s.first_name, s.last_name, s.birth_date, s.identity_code])
+#     list_content = template.render(data=data)
+#     return HttpResponse(list_content)
+
+def show_main_page(request):
     env = Environment(loader=PackageLoader('S1', 'Web/templates'))
     env.globals.update({'static': staticfiles_storage.url("S1/"), 'url': reverse})
-    template = env.get_template('list.html')
-    data = {'header': ['نام', 'نام خانوادگی', 'تاریخ تولد', 'شماره شناسنامه'],
-            'body': [],
-            }
-    for s in student_list:
-        list = data['body']
-        list.append([s.first_name, s.last_name, s.birth_date, s.identity_code])
-    list_content = template.render(data=data)
-    return HttpResponse(list_content)
+    template = env.get_template('main.html')
 
 
 def edit_student_info(request):
     t = request.POST
-
-    # user = User.objects.get(username=t['national_id'])
     try:
-        student = Student.objects.get(identity_code=t.get('national_id'))
+        user = User.objects.get(username=t['user_name'])
     except:
         raise Http404("no user")
-    if t.get('first_name') != '': student.first_name = t.get('first_name')
-    if t.get('last_name') != '': student.last_name = t.get('last_name')
-    if t.get('birth_date') != '': student.birth_date = t.get('birth_date')
 
-    # user.save()
-    student.save()
+    person = user.person
+    if t.get('first_name') != '': user.first_name = t.get('first_name')
+    if t.get('last_name')  != '': user.last_name = t.get('last_name')
+    if t.get('birth_date') != '': person.birth_date = t.get('birth_date')
+
+    user.save()
+    person.save()
     return HttpResponse("Edited Successfully!")
 
 
 def remove_student(request):
     t = request.POST
     try:
-        student = Student.objects.get(identity_code=t.get('national_id'))
+        user = User.objects.get(username=t.get('user_name'))
     except:
         raise Http404("no user")
-    student.delete()
+    person = user.person
+    person.delete()
     return HttpResponse("successfuliy removed")
 
 
-def remove_student(request):
-    t = request.POST
-
-    user = User.objects.get(username=t['national_id'])
-    user.delete()
-
-
 def sign_in(request):
-    pass
+    if request.method is 'POST':
+        try:
+            user = authenticate(request, username=request.POST['username'], password=request.POST['password'])
+            if user is not None:
+                login(request, user)
+                return HttpResponse('successful login')
+            else:
+                return HttpResponse('unsuccessful login')
+        except:
+            raise Http404("problem in sending data")
 
 
 def process_creation(request):
@@ -192,7 +199,7 @@ def create_phase_rel(request):
     f_phase = ...
     s_phase = ...
     is_acc = ...
-    rel = models.PairPhase.objects.create(f_phase=f_phase,s_phase=s_phase,is_acc=is_acc)
+    rel = models.PairPhase.objects.create(f_phase=f_phase, s_phase=s_phase, is_acc=is_acc)
 
 
 def get_start_phase(request):
@@ -206,8 +213,9 @@ def get_next_phase(request):
 def upload_attachment(request):
     file = ...
     title = ...
-    attachment = models.Attachment.objects.create(file=file,title=title)
+    attachment = models.Attachment.objects.create(file=file, title=title)
     attachment.save()
+
 
 def pay(request):
     pass
