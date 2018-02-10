@@ -9,7 +9,7 @@ from django.contrib.auth.models import Permission, User
 from django.contrib.auth import authenticate, login
 
 # Create your views here.
-from S1.models import Person
+from S1.models import Person, Phase, Process, PhaseType, Position
 from datetime import date
 
 env = Environment(loader=PackageLoader('S1', 'Web/templates'))
@@ -97,7 +97,7 @@ def edit_student_info(request):
 
     person = user.person
     if t.get('first_name') != '': user.first_name = t.get('first_name')
-    if t.get('last_name')  != '': user.last_name = t.get('last_name')
+    if t.get('last_name') != '': user.last_name = t.get('last_name')
     if t.get('birth_date') != '': person.birth_date = t.get('birth_date')
 
     user.save()
@@ -113,7 +113,7 @@ def remove_student(request):
         raise Http404("no user")
     person = user.person
     person.delete()
-    return HttpResponse("successfuliy removed")
+    return HttpResponse("successfully removed")
 
 
 def sign_in(request):
@@ -130,10 +130,16 @@ def sign_in(request):
 
 
 def process_creation(request):
-    # get person - > manager
-    manager = ...
-    process_name = ...
-    f_phase = ...
+    # put some thing in session put some in post
+    s = request.session
+    t = request.POST
+    p = User.objects.get(s['user_name']).person
+    if p.position != "Manager":
+        return Http404("you have no permission")
+    # get person -> manager
+    manager = p
+    process_name = t['process_name']
+    f_phase = Phase.objects.get(t['phase_id'])
     process = models.Process.objects.create(name=process_name,
                                             start_phase=f_phase)
     process.save()
@@ -143,13 +149,12 @@ from anytree import Node
 
 
 def get_process(request):
-    process_name = ...
+    process_name = request.POST['process_name']
     process = models.Process.objects.get(name=process_name)
-    phase_list = []
     f_phase = process.start_phase
     tree = Node(f_phase)
     make_tree(tree, f_phase)
-    pass
+    return tree
 
 
 def make_tree(node, f_phase):
@@ -161,7 +166,7 @@ def make_tree(node, f_phase):
 
 
 def phase_creation(request):
-    phase_type = ...
+    phase_type = PhaseType.objects.get(request.POST['phase_type_id'])
     phase = models.Phase.objects.create(phase_type=phase_type)
     phase.save()
 
@@ -171,16 +176,23 @@ def get_phase_types(request):
 
 
 def get_accountant_cartable(request):
-    pass
+    s = request.session
+    p = Person.objects.get(id=s['person_id'])
+    if p.position is None:
+        return Http404()
+    cartable = []
+    for pos in Position.objects.get(id=p.position):
+        cartable.append(pos.accountant_phase)
+    return cartable
 
 
 def get_phase(request):
-    id = ...
+    id = request.POST['phase_id']
     phase = models.Phase.objects.get(id=id)
 
 
 def verify_phase(request):
-    id = ...
+    id = request.session['phase_id']
     phase = models.Phase.objects.get(id=id)
     phase.is_verified = True
     phase.save()
@@ -191,18 +203,19 @@ def get_processes_student(request):
 
 
 def get_process_student(request):
-    proc_name = ...
+    proc_name = Process.objects.get(name=request.POST['process_name'])
     models.Process.objects.get(name=proc_name)
 
 
 def create_phase_rel(request):
-    f_phase = ...
-    s_phase = ...
-    is_acc = ...
+    f_phase = Phase.objects.get(id=request.POST['f_phase_id'])
+    s_phase = Phase.objects.get(id=request.POST['s_phase_id'])
+    is_acc = False
     rel = models.PairPhase.objects.create(f_phase=f_phase, s_phase=s_phase, is_acc=is_acc)
 
 
 def get_start_phase(request):
+    s = request.session
     pass
 
 
@@ -211,10 +224,19 @@ def get_next_phase(request):
 
 
 def upload_attachment(request):
-    file = ...
-    title = ...
-    attachment = models.Attachment.objects.create(file=file, title=title)
+    file = request.FILES
+    title = request.POST
+    attachment = models.Attachment(file=file, title=title)
+    if attachment.is_valid():
+        handle_uploaded_file(request.FILES['file'])
+        return ...
     attachment.save()
+
+
+def handle_uploaded_file(f):
+    with open('some/file/name.txt', 'wb+') as destination:
+        for chunk in f.chunks():
+            destination.write(chunk)
 
 
 def pay(request):

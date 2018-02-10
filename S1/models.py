@@ -14,15 +14,34 @@ class Attachment(models.Model):
     file = models.FileField()
 
 
+class Student(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    identity_code = models.CharField(max_length=10)
+    birth_date = models.DateField()
+    level = models.CharField(max_length=10)
+    student_number = models.CharField(max_length=10)
+
+
 class Transaction(models.Model):
     issue_tracking_number = models.IntegerField()
+    date = models.DateField
+    amount = models.IntegerField()
+    account_id = models.ForeignKey(User, on_delete=models.CASCADE)
 
 
 class Position(models.Model):
     accountant_phases = models.ForeignKey(Phase, on_delete=models.CASCADE)
+    title = models.CharField(max_length=10)
 
 
 class Process(models.Model):
+    start_time = models.TimeField()
+    finish_time = models.TimeField()
+    process_type = models.ForeignKey(ProcessType, on_delete=models.CASCADE)
+    student = models.ForeignKey(Student)
+
+
+class ProcessType(models.Model):
     name = models.CharField(unique=True)
     # phases = models.ForeignKey(Phase, on_delete=models.CASCADE)
     start_phase = models.OneToOneField(Phase, on_delete=models.CASCADE)
