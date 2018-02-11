@@ -16,7 +16,13 @@ Including another URLconf
 from django.conf.urls import include, url
 from django.contrib import admin
 from S1 import views
+
 urlpatterns = [
+    url(r'^test_get_name/', views.get_name),
+    url(r'^test/', views.get_main_page),
+    url(r'^test_sing_in/', views.get_signin),
+    url(r'^test_process/', views.show_process),
+    url(r'^tes_main/', views.show_main_page),
     url(r'^admin/', admin.site.urls),
     url(r'^test/add/?$', views.auth_register),
     url(r'^test/edit/?$', views.edit_student_info),

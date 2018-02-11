@@ -8,8 +8,13 @@ from S1 import models
 from django.contrib.auth.models import Permission, User
 from django.contrib.auth import authenticate, login
 
+from django.shortcuts import render
+from django.http import HttpResponseRedirect
+
+from .forms import NameForm, SingInForm
+
 # Create your views here.
-from S1.models import Person, Phase, Process, PhaseType, Position
+from S1.models import Person, Phase, Process, PhaseType, Position, Student
 from datetime import date
 
 env = Environment(loader=PackageLoader('S1', 'Web/templates'))
@@ -68,19 +73,20 @@ def auth_register(request):
         return HttpResponse('successful sign up')
 
 
-# def represent_student_list(request):
-#     student_list = Student.objects.all()
-#     env = Environment(loader=PackageLoader('S1', 'Web/templates'))
-#     env.globals.update({'static': staticfiles_storage.url("S1/"), 'url': reverse})
-#     template = env.get_template('list.html')
-#     data = {'header': ['نام', 'نام خانوادگی', 'تاریخ تولد', 'شماره شناسنامه'],
-#             'body': [],
-#             }
-#     for s in student_list:
-#         list = data['body']
-#         list.append([s.first_name, s.last_name, s.birth_date, s.identity_code])
-#     list_content = template.render(data=data)
-#     return HttpResponse(list_content)
+def represent_student_list(request):
+    student_list = Student.objects.all()
+    env = Environment(loader=PackageLoader('S1', 'Web/templates'))
+    env.globals.update({'static': staticfiles_storage.url("S1/"), 'url': reverse})
+    template = env.get_template('list.html')
+    data = {'header': ['نام', 'نام خانوادگی', 'تاریخ تولد', 'شماره شناسنامه'],
+            'body': [],
+            }
+    for s in student_list:
+        list = data['body']
+        list.append([s.first_name, s.last_name, s.birth_date, s.identity_code])
+    list_content = template.render(data=data)
+    return HttpResponse(list_content)
+
 
 def show_main_page(request):
     env = Environment(loader=PackageLoader('S1', 'Web/templates'))
@@ -175,6 +181,12 @@ def get_phase_types(request):
     models.PhaseType.objects.all()
 
 
+def show_phase_types(request):
+    proc = ['prc1', 'prc2', 'prc3']
+    return render(request, 'show_phase_type_page.html', {'names': proc})
+
+
+
 def get_accountant_cartable(request):
     s = request.session
     p = Person.objects.get(id=s['person_id'])
@@ -206,12 +218,6 @@ def get_process_student(request):
     proc_name = Process.objects.get(name=request.POST['process_name'])
     models.Process.objects.get(name=proc_name)
 
-
-def create_phase_rel(request):
-    f_phase = Phase.objects.get(id=request.POST['f_phase_id'])
-    s_phase = Phase.objects.get(id=request.POST['s_phase_id'])
-    is_acc = False
-    rel = models.PairPhase.objects.create(f_phase=f_phase, s_phase=s_phase, is_acc=is_acc)
 
 
 def get_start_phase(request):
@@ -248,4 +254,52 @@ def submit_data(request):
 
 
 def get_main_page(request):
+    return render(request, 'main_page.html', {})
+
+
+def get_name(request):
+    # if this is a POST request we need to process the form data
+    if request.method == 'POST':
+        # create a form instance and populate it with data from the request:
+        form = NameForm(request.POST)
+        # check whether it's valid:
+        if form.is_valid():
+            # process the data in form.cleaned_data as required
+            # ...
+            # redirect to a new URL:
+            return HttpResponseRedirect('/')
+
+    # if a GET (or any other method) we'll create a blank form
+    else:
+        form = NameForm()
+
+    return render(request, 'reg_form.html', {'form': form})
+
+
+def get_signin(request):
+    # if this is a POST request we need to process the form data
+    if request.method == 'POST':
+        # create a form instance and populate it with data from the request:
+        form = SingInForm(request.POST)
+        # check whether it's valid:
+        if form.is_valid():
+            # process the data in form.cleaned_data as required
+            # ...
+            # redirect to a new URL:
+            return HttpResponseRedirect('/test/')
+
+    # if a GET (or any other method) we'll create a blank form
+    else:
+        form = SingInForm()
+
+    return render(request, 'signin_form.html', {'form': form})
+
+
+def get_processes(request):
     pass
+
+
+def show_process(request):
+    proc = ['prc1', 'prc2', 'prc3']
+    return render(request, 'get_process_page.html', {'names': proc})
+
