@@ -19,7 +19,6 @@ from S1 import views
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^test/add/?$', views.auth_register),
-    url(r'^test/show/?$', views.represent_student_list),
     url(r'^test/edit/?$', views.edit_student_info),
     url(r'^test/remove/?$', views.remove_student),
     url(r'^test/', include('S1.urls'))
