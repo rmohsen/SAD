@@ -37,6 +37,7 @@ urlpatterns = [
 
     url(r'^test_add_process_type/', views.create_process_type),
     url(r'^test_get_transactions/', views.get_transactions),
+    url(r'^test_add_phase_type/', views.create_phase_type),
 
     url(r'^tes_main/', views.show_main_page),
     url(r'^admin/', admin.site.urls),

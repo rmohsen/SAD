@@ -1,11 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
+{#{% include 'material/includes/material_css.html' %}#}
+{#{% include 'material/includes/material_js.html' %}#}
+{% load material_form %}
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
 </head>
 <body>
-<a href="http://127.0.0.1:8000/test_add_phase_type/" name="get_process">show process</a>
+<a href="http://127.0.0.1:8000/test_add_phase_type/" name="get_process">add phase type</a>
 <form method="POST">
     {% csrf_token %}
     {% form %}{% endform %}

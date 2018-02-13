@@ -26,12 +26,16 @@ class SignInForm(forms.Form):
     layout = Layout('username', 'password')
 
 
-class phase_create(forms.Form):
+class phase_type_form(forms.Form):
     name = forms.CharField()
-    phase_type_id = forms.IntegerField
-    next_phase_acc = forms.IntegerField  # next_phase_id
-    next_phase_rej = forms.IntegerField
-
+    phase_type_id = forms.IntegerField()
+    next_phase_type_acc = forms.IntegerField()  # next_phase_id
+    next_phase_type_rej = forms.IntegerField()
 
 class process_form(forms.Form):
     name = forms.CharField()
+
+
+class process_type_form(forms.Form):
+    name = forms.CharField()
+    first_phase_type_id = forms.IntegerField()

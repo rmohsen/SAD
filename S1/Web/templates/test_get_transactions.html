@@ -5,8 +5,9 @@
     <title>Title</title>
 </head>
 <body>
-{% for data in datas %}
-    <p>{{ data.issue_tracking_number }} , {{ data.date }} , {{ data.amount }} , {{ data.account_id }}</p>
+{% for tranasction in transactions %}
+    <p>{{ tranasction.issue_tracking_number }} , {{ tranasction.date }} , {{ tranasction.amount }}
+        , {{ tranasction.account_id }}</p>
 {% endfor %}
 
 </body>

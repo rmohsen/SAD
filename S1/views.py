@@ -201,20 +201,48 @@ def get_phase_types(request):
 
 
 def create_process_type(request):
-    return render(request, 'test_add_process_type.html', {'names': 'c'})
+    if request.method == 'POST':
+        # create a form instance and populate it with data from the request:
+        form = forms.process_type_form(request.POST)
+        # check whether it's valid:
+        if form.is_valid():
+            # process the data in form.cleaned_data as required
+            # ...
+            # redirect to a new URL:
+            return HttpResponseRedirect('/')
+
+    # if a GET (or any other method) we'll create a blank form
+    else:
+        form = forms.process_type_form()
+    return render(request, 'test_add_process_type.html', {'names': 'c', 'form': form})
 
 
 def get_transactions(request):
-    return render(request, 'test_get_transactions.html', {'names': 'b'})
+    transactions = [{'amount':'1','issue_tracking_number':'2','date':'3','account_id':'4'}]
+    return render(request, 'test_get_transactions.html', {'transactions': transactions})
 
 
 def create_phase_type(request):
-    return render(request, 'test_add_phase_type.html', {'names': 'a'})
+    if request.method == 'POST':
+        form1 = forms.phase_type_form(request.POST)
+        # create a form instance and populate it with data from the request:
+        # check whether it's valid:
+        if form1.is_valid():
+            # process the data in form.cleaned_data as required
+            # ...
+            # redirect to a new URL:
+            return HttpResponseRedirect('/')
 
+    # if a GET (or any other method) we'll create a blank form
+    else:
+        form1 = forms.phase_type_form()
 
-def show_phase_types(request):
-    proc = [{'id': '100', 'need_transaction': 'True', 'need_attachment': 'false'}, 'prc2', 'prc3']
-    return render(request, 'show_phase_type_page.html', {'names': proc})
+    return render(request, 'test_add_phase_type.html', {'form': form1})
+
+#
+# def show_phase_types(request):
+#     proc = [{'id': '100', 'need_transaction': 'True', 'need_attachment': 'false'}, 'prc2', 'prc3']
+#     return render(request, 'show_phase_type_page.html', {'names': proc})
 
 
 def get_accountant_cartable(request):
@@ -230,8 +258,8 @@ def get_accountant_cartable(request):
 
 def show_account_cartable(request):
     # cartable = get_accountant_cartable()
-    cartable = []
-    return render(request, 'test_show_cartable.html', {'works': cartable})
+    cartable = [{'s1': 'a'}, {'s2': 'a2'}]
+    return render(request, 'test_show_cartable.html', {'cartables': cartable})
 
 
 def get_phase(request):
@@ -391,10 +419,10 @@ def get_acc_karbari(request):
 def show_process(request):
     form = forms.process_form(request.POST)
     if form.is_valid():
-        return HttpResponseRedirect('/test_karbari_modir/')
+        return render(request, 'test_vis_process.html', {'data': form.cleaned_data.get('name')})
     else:
         form = forms.process_form()
-    return render(request, 'test_show_process.html')
+    return render(request, 'test_show_process.html', {'form': form})
 
 
 def show_processes(request):

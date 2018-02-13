@@ -1,10 +1,15 @@
 <!DOCTYPE html>
+
 <html lang="en">
+{#{% include 'material/includes/material_css.html' %}#}
+{#{% include 'material/includes/material_js.html' %}#}
+{% load material_form %}
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
 </head>
 <body>
+
 <form method="POST">
     {% csrf_token %}
     {% form %}{% endform %}
