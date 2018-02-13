@@ -9,7 +9,7 @@ class NameForm(forms.Form):
     password_confirm = forms.CharField(widget=forms.PasswordInput, label="Confirm password")
     first_name = forms.CharField(required=False)
     last_name = forms.CharField(required=False)
-    gender = forms.ChoiceField(choices=((None, ''), ('F', 'Female'), ('M', 'Male'), ('O', 'Other')))
+    type = forms.ChoiceField(choices=(('S', 'Student'), ('M', 'Manager'), ('O', 'Employee')))
     receive_news = forms.BooleanField(required=False, label='I want to receive news and special offers')
     agree_toc = forms.BooleanField(required=True, label='I agree with the Terms and Conditions')
 
@@ -17,17 +17,21 @@ class NameForm(forms.Form):
                     Row('password', 'password_confirm'),
                     Fieldset('Personal details',
                              Row('first_name', 'last_name'),
-                             'gender', 'receive_news', 'agree_toc'))
+                             'type', 'receive_news', 'agree_toc'))
 
 
 class SignInForm(forms.Form):
     username = forms.CharField()
     password = forms.CharField(widget=forms.PasswordInput)
-    layout = Layout('username','password')
-    
-    
+    layout = Layout('username', 'password')
+
+
 class phase_create(forms.Form):
     name = forms.CharField()
     phase_type_id = forms.IntegerField
     next_phase_acc = forms.IntegerField  # next_phase_id
     next_phase_rej = forms.IntegerField
+
+
+class process_form(forms.Form):
+    name = forms.CharField()

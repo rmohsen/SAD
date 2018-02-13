@@ -18,13 +18,26 @@ from django.contrib import admin
 from S1 import views
 
 urlpatterns = [
-    url(r'^test_get_name/', views.get_name),
     url(r'^test/', views.get_main_page),
+    url(r'^test_get_name/', views.get_name),
+
     url(r'^test_sign_in/', views.get_signin),
-    url(r'^test_sign_karbari_modir/', views.get_signin_modir),
-    url(r'^test_karbari/', views.get_processes),
-    url(r'^test_cartable/', views.show_account_cartable),
-    url(r'^test_get_process/', views.show_processes),
+    url(r'^test_sign_in_acc/', views.get_signin_acc),
+    url(r'^test_sign_in_modir/', views.get_signin_modir),
+
+    url(r'^test_karbari/', views.get_student_karbari),
+    url(r'^test_karbari_acc/', views.get_acc_karbari),
+    url(r'^test_karbari_modir/', views.get_modir_karbari),
+
+    url(r'^test_get_processes/', views.show_processes),
+    url(r'^test_show_process/', views.show_process),
+    url(r'^test_get_process/', views.get_process ),
+
+    url(r'^test_show_cartable/', views.show_account_cartable),
+
+    url(r'^test_add_process_type/', views.create_process_type),
+    url(r'^test_get_transactions/', views.get_transactions),
+
     url(r'^tes_main/', views.show_main_page),
     url(r'^admin/', admin.site.urls),
     url(r'^test/add/?$', views.auth_register),
@@ -32,3 +45,5 @@ urlpatterns = [
     url(r'^test/remove/?$', views.remove_student),
     url(r'^test/', include('S1.urls'))
 ]
+# <a href="http://127.0.0.1:8000/test_add_process_type/" name="add_process_type">add process type</a>
+# <a href="http://127.0.0.1:8000/test_get_transactions/

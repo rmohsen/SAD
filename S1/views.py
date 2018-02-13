@@ -4,6 +4,8 @@ from django.http import HttpResponse
 from jinja2 import Environment, PackageLoader, select_autoescape
 from django.contrib.staticfiles.storage import staticfiles_storage
 from django.urls import reverse
+
+from S1 import forms
 from S1 import models
 from django.contrib.auth.models import Permission, User
 from django.contrib.auth import authenticate, login
@@ -155,12 +157,29 @@ from anytree import Node
 
 
 def get_process(request):
-    process_name = request.POST['process_name']
-    process = models.Process.objects.get(name=process_name)
-    f_phase = process.start_phase
-    tree = Node(f_phase)
-    make_tree(tree, f_phase)
-    return tree
+    if request.method == 'POST':
+        # create a form instance and populate it with data from the request:
+        form = forms.process_form(request.POST)
+        process_info = '1234'
+        # check whether it's valid:
+        if form.is_valid():
+            # process the data in form.cleaned_data as required
+            # ...
+            # redirect to a new URL:
+            return render(request, 'test_vis_process.html', {'data': process_info})
+
+    # if a GET (or any other method) we'll create a blank form
+    else:
+        form = forms.process_form()
+
+    return render(request, 'test_get_process.html', {'form': form})
+
+    # process_name = request.POST['process_name']
+    # process = models.Process.objects.get(name=process_name)
+    # f_phase = process.start_phase
+    # tree = Node(f_phase)
+    # make_tree(tree, f_phase)
+    # return tree
 
 
 def make_tree(node, f_phase):
@@ -181,12 +200,16 @@ def get_phase_types(request):
     models.PhaseType.objects.all()
 
 
-def process_type_create(request):
-    return render(request, 'test_add_process_type.html', {'names': proc})
+def create_process_type(request):
+    return render(request, 'test_add_process_type.html', {'names': 'c'})
 
 
-def phase_type_create(request):
-    return render(request, 'test_add_phase_type.html', {'names': proc})
+def get_transactions(request):
+    return render(request, 'test_get_transactions.html', {'names': 'b'})
+
+
+def create_phase_type(request):
+    return render(request, 'test_add_phase_type.html', {'names': 'a'})
 
 
 def show_phase_types(request):
@@ -208,7 +231,7 @@ def get_accountant_cartable(request):
 def show_account_cartable(request):
     # cartable = get_accountant_cartable()
     cartable = []
-    return render(request, 'get_process_page.html', {'works': cartable})
+    return render(request, 'test_show_cartable.html', {'works': cartable})
 
 
 def get_phase(request):
@@ -326,18 +349,55 @@ def get_signin_modir(request):
     else:
         form = SignInForm()
 
-    return render(request, 'signin_form.html', {'form': form})
+    return render(request, 'test_signin_modir.html', {'form': form})
 
 
-def get_karbari_modir(request):
+def get_signin_acc(request):
+    # if this is a POST request we need to process the form data
+    if request.method == 'POST':
+        # create a form instance and populate it with data from the request:
+        form = SignInForm(request.POST)
+        # check whether it's valid:
+        if form.is_valid():
+            # process the data in form.cleaned_data as required
+            # ...
+            # redirect to a new URL:
+            request.session['user_name'] = form.cleaned_data.get('username')
+            return HttpResponseRedirect('/test_karbari_acc/')
+
+    # if a GET (or any other method) we'll create a blank form
+    else:
+        form = SignInForm()
+
+    return render(request, 'test_signin_acc.html', {'form': form})
+
+
+def get_modir_karbari(request):
     return render(request, 'test_karbari_modir.html')
 
 
 def get_processes(request):
+    return render(request, 'test_get_processes.html')
+
+
+def get_student_karbari(request):
     return render(request, 'test_karbari.html')
+
+
+def get_acc_karbari(request):
+    return render(request, 'test_karbari_acc.html')
+
+
+def show_process(request):
+    form = forms.process_form(request.POST)
+    if form.is_valid():
+        return HttpResponseRedirect('/test_karbari_modir/')
+    else:
+        form = forms.process_form()
+    return render(request, 'test_show_process.html')
 
 
 def show_processes(request):
     proc = [{'name': 'a1', 'type': 'a2', 'id': 'a3'}, {'f1': 'b2', 'f2': 'b2', 'f3': 'b3'}]
     # proc = get_processes()
-    return render(request, 'get_process_page.html', {'data': proc})
+    return render(request, 'test_get_processes.html', {'data': proc})
