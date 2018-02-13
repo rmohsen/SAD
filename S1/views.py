@@ -11,7 +11,7 @@ from django.contrib.auth import authenticate, login
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
 
-from .forms import NameForm, SingInForm
+from .forms import NameForm, SignInForm
 
 # Create your views here.
 from S1.models import Person, Phase, Process, PhaseType, Position, Student
@@ -181,10 +181,17 @@ def get_phase_types(request):
     models.PhaseType.objects.all()
 
 
-def show_phase_types(request):
-    proc = ['prc1', 'prc2', 'prc3']
-    return render(request, 'show_phase_type_page.html', {'names': proc})
+def process_type_create(request):
+    return render(request, 'test_add_process_type.html', {'names': proc})
 
+
+def phase_type_create(request):
+    return render(request, 'test_add_phase_type.html', {'names': proc})
+
+
+def show_phase_types(request):
+    proc = [{'id': '100', 'need_transaction': 'True', 'need_attachment': 'false'}, 'prc2', 'prc3']
+    return render(request, 'show_phase_type_page.html', {'names': proc})
 
 
 def get_accountant_cartable(request):
@@ -196,6 +203,12 @@ def get_accountant_cartable(request):
     for pos in Position.objects.get(id=p.position):
         cartable.append(pos.accountant_phase)
     return cartable
+
+
+def show_account_cartable(request):
+    # cartable = get_accountant_cartable()
+    cartable = []
+    return render(request, 'get_process_page.html', {'works': cartable})
 
 
 def get_phase(request):
@@ -212,12 +225,12 @@ def verify_phase(request):
 
 def get_processes_student(request):
     models.Process.objects.all()
+    return show_processes(...)
 
 
 def get_process_student(request):
     proc_name = Process.objects.get(name=request.POST['process_name'])
     models.Process.objects.get(name=proc_name)
-
 
 
 def get_start_phase(request):
@@ -254,7 +267,7 @@ def submit_data(request):
 
 
 def get_main_page(request):
-    return render(request, 'main_page.html', {})
+    return render(request, 'main_page.html', {'data': request.session['user_name']})
 
 
 def get_name(request):
@@ -280,26 +293,51 @@ def get_signin(request):
     # if this is a POST request we need to process the form data
     if request.method == 'POST':
         # create a form instance and populate it with data from the request:
-        form = SingInForm(request.POST)
+        form = SignInForm(request.POST)
         # check whether it's valid:
         if form.is_valid():
             # process the data in form.cleaned_data as required
             # ...
             # redirect to a new URL:
-            return HttpResponseRedirect('/test/')
+            request.session['user_name'] = form.cleaned_data.get('username')
+            return HttpResponseRedirect('/test_karbari/')
 
     # if a GET (or any other method) we'll create a blank form
     else:
-        form = SingInForm()
+        form = SignInForm()
 
     return render(request, 'signin_form.html', {'form': form})
 
 
+def get_signin_modir(request):
+    # if this is a POST request we need to process the form data
+    if request.method == 'POST':
+        # create a form instance and populate it with data from the request:
+        form = SignInForm(request.POST)
+        # check whether it's valid:
+        if form.is_valid():
+            # process the data in form.cleaned_data as required
+            # ...
+            # redirect to a new URL:
+            request.session['user_name'] = form.cleaned_data.get('username')
+            return HttpResponseRedirect('/test_karbari_modir/')
+
+    # if a GET (or any other method) we'll create a blank form
+    else:
+        form = SignInForm()
+
+    return render(request, 'signin_form.html', {'form': form})
+
+
+def get_karbari_modir(request):
+    return render(request, 'test_karbari_modir.html')
+
+
 def get_processes(request):
-    pass
+    return render(request, 'test_karbari.html')
 
 
-def show_process(request):
-    proc = ['prc1', 'prc2', 'prc3']
-    return render(request, 'get_process_page.html', {'names': proc})
-
+def show_processes(request):
+    proc = [{'name': 'a1', 'type': 'a2', 'id': 'a3'}, {'f1': 'b2', 'f2': 'b2', 'f3': 'b3'}]
+    # proc = get_processes()
+    return render(request, 'get_process_page.html', {'data': proc})

@@ -20,8 +20,11 @@ from S1 import views
 urlpatterns = [
     url(r'^test_get_name/', views.get_name),
     url(r'^test/', views.get_main_page),
-    url(r'^test_sing_in/', views.get_signin),
-    url(r'^test_process/', views.show_process),
+    url(r'^test_sign_in/', views.get_signin),
+    url(r'^test_sign_karbari_modir/', views.get_signin_modir),
+    url(r'^test_karbari/', views.get_processes),
+    url(r'^test_cartable/', views.show_account_cartable),
+    url(r'^test_process/', views.show_processes),
     url(r'^tes_main/', views.show_main_page),
     url(r'^admin/', admin.site.urls),
     url(r'^test/add/?$', views.auth_register),

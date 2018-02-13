@@ -5,8 +5,14 @@
     <title>Title</title>
 </head>
 <body>
-{% for name in names %}
-    <p>{{ name }}</p>
+{#{% for name in names %}#}
+{#    <script>#}
+{#        l = {{ name }}[0]#}
+{#    </script>#}
+{#    <p>l</p>#}
+{#{% endfor %}#}
+{% for foo in data%}
+    <div>{{ foo.name}} , 1</div>
 {% endfor %}
 
 </body>

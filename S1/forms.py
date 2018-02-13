@@ -20,7 +20,14 @@ class NameForm(forms.Form):
                              'gender', 'receive_news', 'agree_toc'))
 
 
-class SingInForm(forms.Form):
+class SignInForm(forms.Form):
     username = forms.CharField()
     password = forms.CharField(widget=forms.PasswordInput)
     layout = Layout('username','password')
+    
+    
+class phase_create(forms.Form):
+    name = forms.CharField()
+    phase_type_id = forms.IntegerField
+    next_phase_acc = forms.IntegerField  # next_phase_id
+    next_phase_rej = forms.IntegerField
