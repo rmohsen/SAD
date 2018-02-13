@@ -24,7 +24,7 @@ urlpatterns = [
     url(r'^test_sign_karbari_modir/', views.get_signin_modir),
     url(r'^test_karbari/', views.get_processes),
     url(r'^test_cartable/', views.show_account_cartable),
-    url(r'^test_process/', views.show_processes),
+    url(r'^test_get_process/', views.show_processes),
     url(r'^tes_main/', views.show_main_page),
     url(r'^admin/', admin.site.urls),
     url(r'^test/add/?$', views.auth_register),
