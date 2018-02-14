@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+{#{% include 'material/includes/material_css.html' %}#}
+{#{% include 'material/includes/material_js.html' %}#}
+{% load material_form %}
+
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<form method="POST">
+    {% csrf_token %}
+    {% form %}{% endform %}
+    <button type="submit" name="_submit" class="btn btn-primary btn-lg">Submit</button>
+</form>
+</body>
+</html>

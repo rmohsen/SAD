@@ -31,9 +31,12 @@ urlpatterns = [
 
     url(r'^test_get_processes/', views.show_processes),
     url(r'^test_show_process/', views.show_process),
-    url(r'^test_get_process/', views.get_process ),
+    url(r'^test_get_process/', views.get_process),
+    url(r'^test_get_phase/', views.show_phase),
+    url(r'^test_get_phase_type/', views.show_phase_type),
 
     url(r'^test_show_cartable/', views.show_account_cartable),
+    url(r'^test_vis_phase/', views.vis_phase),
 
     url(r'^test_add_process_type/', views.create_process_type),
     url(r'^test_get_transactions/', views.get_transactions),

@@ -5,14 +5,11 @@
     <title>Title</title>
 </head>
 <body>
-{#{% for name in names %}#}
-{#    <script>#}
-{#        l = {{ name }}[0]#}
-{#    </script>#}
-{#    <p>l</p>#}
-{#{% endfor %}#}
-{% for foo in data%}
-    <div>{{ foo.name}} , 1</div>
+
+{% for foo in data %}
+    <div>{{ foo }}</div>
+    <div>start time ={{ foo.start_time }},finish time{{ foo.finish_time }},
+        process type id{{ foo.process_type.id }},student owner ={{ foo.student_owner.id }}</div>
 {% endfor %}
 
 </body>

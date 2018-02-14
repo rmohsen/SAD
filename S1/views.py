@@ -51,28 +51,25 @@ def date_parser(input_date):
     return date(year=int(year), month=int(month), day=int(day))
 
 
-def auth_register(request):
+def auth_register(input):
     # post
-    if request.method == 'POST':
-        # try:
-        t = request.POST
-        if t['national_id'] == '' or t['first_name'] == '' or t['last_name'] == '' or t['birth_date'] == '':
-            raise Http404("hame mawared")
-        if Person.objects.filter(identity_code=t['national_id']).exists():
-            raise Http404("user tekrari")
-        print(t['birth_date'])
-        user = User.objects.create(username=t.get('user_name')
-                                   , password=t.get('password')
-                                   , email=t.get('email')
-                                   , first_name=t.get('first_name')
-                                   , last_name=t.get('last_name'))
-
-        person = Person.objects.create(identity_code=t.get('national_id'),
-                                       user=user,
-                                       last_name=t.get('last_name'),
-                                       birth_date=date_parser(t.get('birth_date')))
-
-        return HttpResponse('successful sign up')
+    # try:
+    t = input
+    if User.objects.filter(username=t['username']).exists():
+        return 0
+    user = User.objects.create(username=t.get('username')
+                               , password=t.get('password')
+                               , email=t.get('email')
+                               , first_name=t.get('first_name')
+                               , last_name=t.get('last_name'))
+    user.save()
+    if t.get('type') == 'S':
+        student = Student.objects.create(user=user, identity_code=t['identity_code'])
+        student.save()
+    else:
+        person = Person.objects.create(user=user, identity_code=t.get('identity_code'))
+        person.save()
+    return 1
 
 
 def represent_student_list(request):
@@ -124,17 +121,16 @@ def remove_student(request):
     return HttpResponse("successfully removed")
 
 
-def sign_in(request):
-    if request.method is 'POST':
-        try:
-            user = authenticate(request, username=request.POST['username'], password=request.POST['password'])
-            if user is not None:
-                login(request, user)
-                return HttpResponse('successful login')
-            else:
-                return HttpResponse('unsuccessful login')
-        except:
-            raise Http404("problem in sending data")
+def sign_in(request, input):
+    try:
+        user = authenticate(input, username=input['username'], password=input['password'])
+        if user is not None:
+            login(request=request, user=user)
+            return 1
+        else:
+            return 0
+    except:
+        raise Http404("problem in sending data")
 
 
 def process_creation(request):
@@ -160,13 +156,13 @@ def get_process(request):
     if request.method == 'POST':
         # create a form instance and populate it with data from the request:
         form = forms.process_form(request.POST)
-        process_info = '1234'
+        t = request.POST
+        process_info = Process.objects.get(id=t['process_id'], name=t['name'])
         # check whether it's valid:
-        if form.is_valid():
-            # process the data in form.cleaned_data as required
-            # ...
-            # redirect to a new URL:
-            return render(request, 'test_vis_process.html', {'data': process_info})
+        # process the data in form.cleaned_data as required
+        # ...
+        # redirect to a new URL:
+        return render(request, 'test_vis_process.html', {'data': process_info})
 
     # if a GET (or any other method) we'll create a blank form
     else:
@@ -196,6 +192,27 @@ def phase_creation(request):
     phase.save()
 
 
+def show_phase(request):
+    form = forms.phase_form(request.POST)
+    form1 = forms.main_form(request.POST)
+    if form.is_valid():
+        return render(request, 'test_vis_phase.html',
+                      {'data': Phase.objects.get(id=request.POST.get('phase_id')), 'form': form1})
+    else:
+        form = forms.phase_form()
+    return render(request, 'test_show_phase.html', {'form': form})
+
+
+def show_phase_type(request):
+    form = forms.phase_type_form(request.POST)
+    if form.is_valid():
+        return render(request, 'test_vis_phase_type.html',
+                      {'data': Phase.objects.get(name=request.POST.get('name'))})
+    else:
+        form = forms.phase_type_form()
+    return render(request, 'test_show_phase_type.html', {'form': form})
+
+
 def get_phase_types(request):
     models.PhaseType.objects.all()
 
@@ -204,6 +221,10 @@ def create_process_type(request):
     if request.method == 'POST':
         # create a form instance and populate it with data from the request:
         form = forms.process_type_form(request.POST)
+        t = request.POST
+        models.ProcessType.objects.create(name=t['name'],
+                                          start_phase_type=PhaseType.objects.get(id=t['first_phase_type_id']))
+
         # check whether it's valid:
         if form.is_valid():
             # process the data in form.cleaned_data as required
@@ -218,7 +239,7 @@ def create_process_type(request):
 
 
 def get_transactions(request):
-    transactions = [{'amount':'1','issue_tracking_number':'2','date':'3','account_id':'4'}]
+    transactions = [{'amount': '1', 'issue_tracking_number': '2', 'date': '3', 'account_id': '4'}]
     return render(request, 'test_get_transactions.html', {'transactions': transactions})
 
 
@@ -231,7 +252,13 @@ def create_phase_type(request):
             # process the data in form.cleaned_data as required
             # ...
             # redirect to a new URL:
-            return HttpResponseRedirect('/')
+            t = request.POST
+            PhaseType.objects.create(name=t['name'],
+                                     next_phase_type_acc=t['next_phase_type_acc'],
+                                     next_phase_type_rej=t['next_phase_type_rej'],
+                                     need_attachment=t['need_attachment'],
+                                     need_transaction=t['need_transaction'])
+            return HttpResponseRedirect('/test_karbari_modir/')
 
     # if a GET (or any other method) we'll create a blank form
     else:
@@ -239,27 +266,17 @@ def create_phase_type(request):
 
     return render(request, 'test_add_phase_type.html', {'form': form1})
 
+
 #
 # def show_phase_types(request):
 #     proc = [{'id': '100', 'need_transaction': 'True', 'need_attachment': 'false'}, 'prc2', 'prc3']
 #     return render(request, 'show_phase_type_page.html', {'names': proc})
 
-
-def get_accountant_cartable(request):
-    s = request.session
-    p = Person.objects.get(id=s['person_id'])
-    if p.position is None:
-        return Http404()
-    cartable = []
-    for pos in Position.objects.get(id=p.position):
-        cartable.append(pos.accountant_phase)
-    return cartable
-
-
 def show_account_cartable(request):
     # cartable = get_accountant_cartable()
-    cartable = [{'s1': 'a'}, {'s2': 'a2'}]
-    return render(request, 'test_show_cartable.html', {'cartables': cartable})
+    person = Person.objects.get(user__username=User.get_username(request))
+    cartables = Phase.objects.filter(phase_type__accountant_position__person=person).all()
+    return render(request, 'test_show_cartable.html', {'cartables': cartables})
 
 
 def get_phase(request):
@@ -318,7 +335,7 @@ def submit_data(request):
 
 
 def get_main_page(request):
-    return render(request, 'main_page.html', {'data': request.session['user_name']})
+    return render(request, 'main_page.html')
 
 
 def get_name(request):
@@ -327,12 +344,13 @@ def get_name(request):
         # create a form instance and populate it with data from the request:
         form = NameForm(request.POST)
         # check whether it's valid:
-        if form.is_valid():
+        if auth_register(request.POST) == 1:
             # process the data in form.cleaned_data as required
             # ...
             # redirect to a new URL:
+            return HttpResponseRedirect('/test/')
+        else:
             return HttpResponseRedirect('/')
-
     # if a GET (or any other method) we'll create a blank form
     else:
         form = NameForm()
@@ -345,13 +363,14 @@ def get_signin(request):
     if request.method == 'POST':
         # create a form instance and populate it with data from the request:
         form = SignInForm(request.POST)
-        # check whether it's valid:
-        if form.is_valid():
-            # process the data in form.cleaned_data as required
-            # ...
-            # redirect to a new URL:
-            request.session['user_name'] = form.cleaned_data.get('username')
-            return HttpResponseRedirect('/test_karbari/')
+        sign_in(request=request, input=request.POST)
+        if Student.objects.filter(user__username=request.POST['username']).exists():
+            # check whether it's valid:
+            if form.is_valid():
+                # process the data in form.cleaned_data as required
+                # ...
+                # redirect to a new URL:
+                return HttpResponseRedirect('/test_karbari/')
 
     # if a GET (or any other method) we'll create a blank form
     else:
@@ -365,13 +384,15 @@ def get_signin_modir(request):
     if request.method == 'POST':
         # create a form instance and populate it with data from the request:
         form = SignInForm(request.POST)
-        # check whether it's valid:
-        if form.is_valid():
-            # process the data in form.cleaned_data as required
-            # ...
-            # redirect to a new URL:
-            request.session['user_name'] = form.cleaned_data.get('username')
-            return HttpResponseRedirect('/test_karbari_modir/')
+        sign_in(request=request, input=form.request.POST)
+        # check whether it's valid:)
+        if Position.objects.filter(person__user__username=request.POST['username']).exists():
+            if Position.objects.get(person__user__username=request.POST['username']).title == 'Manager':
+                if form.is_valid():
+                    # process the data in form.cleaned_data as required
+                    # ...
+                    # redirect to a new URL:
+                    return HttpResponseRedirect('/test_karbari_modir/')
 
     # if a GET (or any other method) we'll create a blank form
     else:
@@ -385,13 +406,14 @@ def get_signin_acc(request):
     if request.method == 'POST':
         # create a form instance and populate it with data from the request:
         form = SignInForm(request.POST)
-        # check whether it's valid:
-        if form.is_valid():
-            # process the data in form.cleaned_data as required
-            # ...
-            # redirect to a new URL:
-            request.session['user_name'] = form.cleaned_data.get('username')
-            return HttpResponseRedirect('/test_karbari_acc/')
+        sign_in(request=request, input=request.POST)
+        if Position.objects.filter(person__user__username=request.POST['username']).exists():
+            # check whether it's valid:
+            if form.is_valid():
+                # process the data in form.cleaned_data as required
+                # ...
+                # redirect to a new URL:
+                return HttpResponseRedirect('/test_karbari_acc/')
 
     # if a GET (or any other method) we'll create a blank form
     else:
@@ -419,7 +441,8 @@ def get_acc_karbari(request):
 def show_process(request):
     form = forms.process_form(request.POST)
     if form.is_valid():
-        return render(request, 'test_vis_process.html', {'data': form.cleaned_data.get('name')})
+        return render(request, 'test_vis_process.html',
+                      {'data': Process.objects.get(request.POST.get('name'))})
     else:
         form = forms.process_form()
     return render(request, 'test_show_process.html', {'form': form})
@@ -427,5 +450,6 @@ def show_process(request):
 
 def show_processes(request):
     proc = [{'name': 'a1', 'type': 'a2', 'id': 'a3'}, {'f1': 'b2', 'f2': 'b2', 'f3': 'b3'}]
+    proc = Process.objects.all()
     # proc = get_processes()
-    return render(request, 'test_get_processes.html', {'data': proc})
+    return render(request, 'test_get_processes.html', {'data': stu})
